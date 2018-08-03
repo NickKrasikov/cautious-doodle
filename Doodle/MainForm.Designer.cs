@@ -232,9 +232,9 @@
             // 
             this.panel2.Controls.Add(this.lbVersions);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 68);
+            this.panel2.Location = new System.Drawing.Point(0, 49);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(663, 282);
+            this.panel2.Size = new System.Drawing.Size(663, 301);
             this.panel2.TabIndex = 1;
             // 
             // lbVersions
@@ -243,7 +243,7 @@
             this.lbVersions.FormattingEnabled = true;
             this.lbVersions.Location = new System.Drawing.Point(0, 0);
             this.lbVersions.Name = "lbVersions";
-            this.lbVersions.Size = new System.Drawing.Size(663, 282);
+            this.lbVersions.Size = new System.Drawing.Size(663, 301);
             this.lbVersions.TabIndex = 0;
             this.lbVersions.SelectedIndexChanged += new System.EventHandler(this.lbVersions_SelectedIndexChanged);
             // 
@@ -254,7 +254,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(663, 68);
+            this.panel1.Size = new System.Drawing.Size(663, 49);
             this.panel1.TabIndex = 0;
             // 
             // btnRestore
@@ -267,6 +267,7 @@
             this.btnRestore.TabIndex = 1;
             this.btnRestore.Text = "Restore";
             this.btnRestore.UseVisualStyleBackColor = true;
+            this.btnRestore.Click += new System.EventHandler(this.btnRestore_Click);
             // 
             // btnCurrentVersion
             // 

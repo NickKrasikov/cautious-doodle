@@ -87,7 +87,6 @@ namespace Doodle
             {
                 LogException(ex);
             }
-
         }
 
         private void txtSetting_TextChanged(object sender, EventArgs e)
@@ -135,5 +134,33 @@ namespace Doodle
         {
             txtConsole.Text = "";
         }
+
+        private void btnRestore_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lbVersions.SelectedIndex == -1) return;
+                var newVersion = lbVersions.SelectedItem.ToString();
+                var dbu = new DBUtils();
+                using (var conn = new System.Data.SqlClient.SqlConnection(ConnString))
+                {
+                    dbu.Connection = conn;
+                    dbu.BackupDirectory = txtBackupDirectory.Text;
+                    dbu.DBPrefix = txtDBPrefix.Text;
+                    if (MessageBox.Show(string.Format("You are going to replace version \"{0}\" with version \"{1}\".\nContinue?", dbu.GetCurrentVersion(), newVersion), "Please confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        tcMain.SelectTab(tabConsole);
+                        dbu.BackupDBS();
+                        dbu.RestoreDBS(newVersion);
+                        LoadVersions();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogException(ex);
+            }
+        }
+
     }
 }
