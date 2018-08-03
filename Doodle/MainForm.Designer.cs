@@ -305,9 +305,9 @@
             this.lblDBPrefix.AutoSize = true;
             this.lblDBPrefix.Location = new System.Drawing.Point(9, 111);
             this.lblDBPrefix.Name = "lblDBPrefix";
-            this.lblDBPrefix.Size = new System.Drawing.Size(76, 13);
+            this.lblDBPrefix.Size = new System.Drawing.Size(85, 13);
             this.lblDBPrefix.TabIndex = 9;
-            this.lblDBPrefix.Text = "Backup folder:";
+            this.lblDBPrefix.Text = "Database name:";
             // 
             // panel3
             // 
