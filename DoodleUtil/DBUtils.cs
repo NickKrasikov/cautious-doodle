@@ -9,17 +9,33 @@ namespace DoodleUtil
 {
     public class DBUtils: BaseUtils
     {
+        public SqlConnection Connection
+        {
+            get;
+            set;
+        }
+
+        public string BackupDirectory
+        {
+            get;
+            set;
+        }
+
+        public string DBPrefix
+        {
+            get;
+            set;
+        }
+
         public string GetCurrentVersion()
         {
             string version = string.Empty;
-            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["PlatinaConnString"].ConnectionString))
-            {
-                if(conn.State != System.Data.ConnectionState.Open)
+                if(Connection.State != System.Data.ConnectionState.Open)
                 {
-                    conn.Open();
+                    Connection.Open();
                 }
-                var cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT TOP 1 ver FROM(SELECT installDate, hotfixID as ver FROM platina..tInstallationHistory WHERE hotFixID IS NOT NULL UNION SELECT CAST(0 AS datetime) as installDate, value as ver FROM platina..tPlatinaSettings WHERE name = N'SYSTEM_VersionNumber' ) h1 ORDER BY installDate DESC";
+                var cmd = Connection.CreateCommand();
+                cmd.CommandText = string.Format("SELECT TOP 1 ver FROM(SELECT installDate, hotfixID as ver FROM {0}..tInstallationHistory WHERE hotFixID IS NOT NULL UNION SELECT CAST(0 AS datetime) as installDate, value as ver FROM {0}..tPlatinaSettings WHERE name = N'SYSTEM_VersionNumber' ) h1 ORDER BY installDate DESC", DBPrefix);
                 using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
                     while (rdr.Read())
@@ -27,21 +43,18 @@ namespace DoodleUtil
                         version = rdr[0].ToString(); 
                     }
                 }
-            }
             return version.Replace(" ", "_");
         }
 
-        public List<string> GetPlatinaDBs()
+        public List<string> GetDBs()
         {
             var result = new List<string>();
-            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["PlatinaConnString"].ConnectionString))
-            {
-                if (conn.State != System.Data.ConnectionState.Open)
+                if (Connection.State != System.Data.ConnectionState.Open)
                 {
-                    conn.Open();
+                    Connection.Open();
                 }
-                var cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT name FROM sysdatabases WHERE name LIKE 'platina%'";
+                var cmd = Connection.CreateCommand();
+                cmd.CommandText = string.Format("SELECT name FROM sysdatabases WHERE name LIKE '{0}%'", DBPrefix);
                 using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
                     while (rdr.Read())
@@ -49,7 +62,6 @@ namespace DoodleUtil
                         result.Add(rdr[0].ToString());
                     }
                 }
-            }
             return result;
         }
 
@@ -57,16 +69,13 @@ namespace DoodleUtil
         {
             try
             {
-                using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["PlatinaConnString"].ConnectionString))
-                {
-                    if (conn.State != System.Data.ConnectionState.Open)
+                    if (Connection.State != System.Data.ConnectionState.Open)
                     {
-                        conn.Open();
+                        Connection.Open();
                     }
-                    var cmd = conn.CreateCommand();
+                    var cmd = Connection.CreateCommand();
                     cmd.CommandText = sql;
                     cmd.ExecuteNonQuery();
-                }
             }
             catch (Exception e)
             {
@@ -84,7 +93,7 @@ namespace DoodleUtil
             }
             else
             {
-                string backupDir = ConfigurationManager.AppSettings["BackupFolder"];
+                string backupDir = BackupDirectory;
                 if(string.IsNullOrEmpty(backupDir))
                 {
                     backupDir = ".";
@@ -94,12 +103,13 @@ namespace DoodleUtil
                     backupDir += @"\";
                 }
                 backupDir = string.Format("{0}{1}", backupDir, version);
-                if(!Directory.Exists(backupDir))
+                backupDir = Path.GetFullPath(backupDir);
+                if (!Directory.Exists(backupDir))
                 {
                     logger.WriteLine("Backup directory \"{0}\" doesn't exist. Try to create it.", backupDir);
                     Directory.CreateDirectory(backupDir);
                 }
-                foreach (var dbName in GetPlatinaDBs())
+                foreach (var dbName in GetDBs())
                 {
                     string fName = string.Format(@"{1}\{0}.bak",dbName,backupDir);
                     logger.WriteLine("Backup database \"{0}\" to file \"{1}\"", dbName, fName);
@@ -113,7 +123,7 @@ namespace DoodleUtil
         public List<string> GetLocalVersions()
         {
             var result = new List<string>();
-            string backupDir = ConfigurationManager.AppSettings["BackupFolder"];
+            string backupDir = BackupDirectory;
             if (string.IsNullOrEmpty(backupDir))
             {
                 backupDir = ".";
@@ -124,7 +134,7 @@ namespace DoodleUtil
             }
             foreach (var dir in Directory.GetDirectories(backupDir, "*", SearchOption.TopDirectoryOnly))
             {
-                result.Add(dir.Substring(dir.LastIndexOf("\\") + 1).ToLower());
+                result.Add(dir.Substring(dir.LastIndexOf(@"\") + 1).ToLower());
             }
             return result;
         }
@@ -136,7 +146,7 @@ namespace DoodleUtil
             sb.AppendLine("DECLARE @SQL AS VARCHAR(255)");
             sb.AppendLine("DECLARE @SPID AS SMALLINT");
             sb.AppendLine("DECLARE Murderer CURSOR FOR");
-            sb.AppendLine("SELECT spid FROM sys.sysprocesses WHERE DB_NAME(dbid) LIKE N'platina%'");
+            sb.AppendLine(string.Format("SELECT spid FROM sys.sysprocesses WHERE DB_NAME(dbid) LIKE N'{0}%'", DBPrefix));
             sb.AppendLine("OPEN Murderer");
             sb.AppendLine("FETCH NEXT FROM Murderer INTO @SPID");
             sb.AppendLine("WHILE @@FETCH_STATUS = 0");
@@ -162,7 +172,7 @@ namespace DoodleUtil
         public void DropDBS()
         {
             KillConnections();
-            foreach (var db in GetPlatinaDBs())
+            foreach (var db in GetDBs())
                 DropDB(db);
         }
 
@@ -175,7 +185,7 @@ namespace DoodleUtil
 
         public void RestoreDBS(string version)
         {
-            string backupDir = ConfigurationManager.AppSettings["BackupFolder"];
+            string backupDir = BackupDirectory;
             if (string.IsNullOrEmpty(backupDir))
             {
                 backupDir = ".";
