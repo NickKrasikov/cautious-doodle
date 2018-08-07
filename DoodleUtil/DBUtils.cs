@@ -7,13 +7,45 @@ using System.Text;
 
 namespace DoodleUtil
 {
-    public class DBUtils: BaseUtils
+    public class BackupInfo
     {
-        public SqlConnection Connection
+        public string Version
         {
             get;
             set;
         }
+        public DateTime Timestamp
+        {
+            get;
+            set;
+        }
+    }
+
+    public class DBUtils: BaseUtils, IDisposable
+    {
+        private SqlConnection m_conn;
+        public SqlConnection Connection
+        {
+            get
+            {
+                if(m_conn == null)
+                {
+                    m_conn = new SqlConnection(ConnString);
+                }
+                if (m_conn.State != System.Data.ConnectionState.Open)
+                {
+                    m_conn.Open();
+                }
+                return m_conn;
+            }
+        }
+
+        public string ConnString
+        {
+            get;
+            set;
+        }
+
 
         public string BackupDirectory
         {
@@ -27,13 +59,18 @@ namespace DoodleUtil
             set;
         }
 
+        public DBUtils() : base()
+        {
+        }
+
+
+        public DBUtils(TextWriter writer): base(writer)
+        {
+        }
+
         public string GetCurrentVersion()
         {
             string version = string.Empty;
-                if(Connection.State != System.Data.ConnectionState.Open)
-                {
-                    Connection.Open();
-                }
                 var cmd = Connection.CreateCommand();
                 cmd.CommandText = string.Format("SELECT TOP 1 ver FROM(SELECT installDate, hotfixID as ver FROM {0}..tInstallationHistory WHERE hotFixID IS NOT NULL UNION SELECT CAST(0 AS datetime) as installDate, value as ver FROM {0}..tPlatinaSettings WHERE name = N'SYSTEM_VersionNumber' ) h1 ORDER BY installDate DESC", DBPrefix);
                 using (SqlDataReader rdr = cmd.ExecuteReader())
@@ -49,10 +86,6 @@ namespace DoodleUtil
         public List<string> GetDBs()
         {
             var result = new List<string>();
-                if (Connection.State != System.Data.ConnectionState.Open)
-                {
-                    Connection.Open();
-                }
                 var cmd = Connection.CreateCommand();
                 cmd.CommandText = string.Format("SELECT name FROM sysdatabases WHERE name LIKE '{0}%'", DBPrefix);
                 using (SqlDataReader rdr = cmd.ExecuteReader())
@@ -69,10 +102,6 @@ namespace DoodleUtil
         {
             try
             {
-                    if (Connection.State != System.Data.ConnectionState.Open)
-                    {
-                        Connection.Open();
-                    }
                     var cmd = Connection.CreateCommand();
                     cmd.CommandText = sql;
                     cmd.ExecuteNonQuery();
@@ -102,7 +131,7 @@ namespace DoodleUtil
                 {
                     backupDir += @"\";
                 }
-                backupDir = string.Format("{0}{1}", backupDir, version);
+                backupDir = string.Format("{0}{1}\\{2}", backupDir, version, DateTime.Now.ToString(TimestampFormatString));
                 backupDir = Path.GetFullPath(backupDir);
                 if (!Directory.Exists(backupDir))
                 {
@@ -135,6 +164,34 @@ namespace DoodleUtil
             foreach (var dir in Directory.GetDirectories(backupDir, "*", SearchOption.TopDirectoryOnly))
             {
                 result.Add(dir.Substring(dir.LastIndexOf(@"\") + 1).ToLower());
+            }
+            return result;
+        }
+
+        public List<BackupInfo> GetLocalBackups()
+        {
+            var result = new List<BackupInfo>();
+            string backupDir = BackupDirectory;
+            if (string.IsNullOrEmpty(backupDir))
+            {
+                backupDir = ".";
+            }
+            if (!backupDir.EndsWith(@"\"))
+            {
+                backupDir += @"\";
+            }
+            foreach (var ver in Directory.GetDirectories(backupDir, "*", SearchOption.TopDirectoryOnly))
+            {
+                string sVer = ver.Substring(ver.LastIndexOf(@"\") + 1).ToLower();
+                foreach (var ts in Directory.GetDirectories(ver, "*", SearchOption.TopDirectoryOnly))
+                {
+                    string tmp = ts.Substring(ts.LastIndexOf(@"\") + 1).ToLower();
+                    DateTime dt;
+                    if (DateTime.TryParseExact(tmp, TimestampFormatString, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out dt))
+                    {
+                        result.Add(new BackupInfo() { Version = sVer, Timestamp = dt });
+                    }
+                }
             }
             return result;
         }
@@ -183,6 +240,42 @@ namespace DoodleUtil
             logger.WriteLine("Done");
         }
 
+        public void RestoreDBS(string version, DateTime timestamp)
+        {
+            string backupDir = BackupDirectory;
+            if (string.IsNullOrEmpty(backupDir))
+            {
+                backupDir = ".";
+            }
+            if (!backupDir.EndsWith(@"\"))
+            {
+                backupDir += @"\";
+            }
+            backupDir += version;
+            if (!backupDir.EndsWith(@"\"))
+            {
+                backupDir += @"\";
+            }
+            backupDir += timestamp.ToString(TimestampFormatString);
+            if (Directory.Exists(backupDir))
+            {
+                logger.WriteLine("Restore databases from directory \"{0}\"", backupDir);
+                KillConnections();
+                foreach (var file in Directory.GetFiles(backupDir))
+                {
+                    if (Path.GetExtension(file) == ".bak")
+                    {
+                        var dbName = Path.GetFileNameWithoutExtension(file);
+                        RestoreDB(dbName, file);
+                    }
+                }
+            }
+            else
+            {
+                logger.WriteLine("Directory \"{0}\" doesn't exist. Nothing to restore.", backupDir);
+            }
+        }
+
         public void RestoreDBS(string version)
         {
             string backupDir = BackupDirectory;
@@ -214,5 +307,10 @@ namespace DoodleUtil
             }
         }
 
+        public void Dispose()
+        {
+            if(m_conn != null)
+                m_conn.Dispose();
+        }
     }
 }

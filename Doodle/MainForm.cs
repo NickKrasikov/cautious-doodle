@@ -3,6 +3,8 @@ using System.IO;
 using System.Windows.Forms;
 
 using DoodleUtil;
+using System.ComponentModel;
+using Subro.Controls;
 
 namespace Doodle
 {
@@ -18,23 +20,50 @@ namespace Doodle
             }
         }
 
+        private DBUtils m_DBUtils;
+        protected DBUtils DBUtils
+        {
+            get
+            {
+                if (m_DBUtils == null)
+                {
+                    m_DBUtils = new DBUtils(new TextBoxStreamWriter(txtConsole) as TextWriter);
+                }
+                m_DBUtils.BackupDirectory = txtBackupDirectory.Text;
+                m_DBUtils.DBPrefix = txtDBPrefix.Text;
+                m_DBUtils.ConnString = this.ConnString;
+                return m_DBUtils;
+            }
+        }
+
         public MainForm()
         {
             InitializeComponent();
+            backupInfoBindingSource.DataSource = GetVersionsList();
+            dgvVersions.AutoGenerateColumns = true;
+            var grouper = new Subro.Controls.DataGridViewGrouper(dgvVersions);
+            grouper.SetGroupOn("Version");
+            grouper.DisplayGroup += grouper_DisplayGroup;
+            grouper.Options.StartCollapsed = true;
+            grouper.CollapseAll();
+
+        }
+
+        void grouper_DisplayGroup(object sender, GroupDisplayEventArgs e)
+        {
+            e.Summary = "contains " + e.Group.Count + " rows";
+        }
+
+        private BindingList<BackupInfo> GetVersionsList()
+        {
+            return new BindingList<BackupInfo>(DBUtils.GetLocalBackups());
         }
 
         private void btnShowCurrentVersion_Click(object sender, EventArgs e)
         {
             try
             {
-                var dbu = new DBUtils();
-                using (var conn = new System.Data.SqlClient.SqlConnection(ConnString))
-                {
-                    dbu.Connection = conn;
-                    dbu.BackupDirectory = txtBackupDirectory.Text;
-                    dbu.DBPrefix = txtDBPrefix.Text;
-                    MessageBox.Show(dbu.GetCurrentVersion());
-                }
+                    MessageBox.Show(DBUtils.GetCurrentVersion());
             }
             catch (Exception ex)
             {
@@ -59,29 +88,16 @@ namespace Doodle
 
         private void LoadVersions()
         {
-            lbVersions.Items.Clear();
-            var dbu = new DBUtils();
-            dbu.BackupDirectory = txtBackupDirectory.Text;
-            foreach (var item in dbu.GetLocalVersions())
-            {
-                lbVersions.Items.Add(item);
-            }
+            backupInfoBindingSource.DataSource = GetVersionsList();
         }
 
         private void btnBackup_Click(object sender, EventArgs e)
         {
             try
             { 
-                var dbu = new DBUtils();
-                using (var conn = new System.Data.SqlClient.SqlConnection(ConnString))
-                {
-                    dbu.Connection = conn;
-                    dbu.BackupDirectory = txtBackupDirectory.Text;
-                    dbu.DBPrefix = txtDBPrefix.Text;
                     tcMain.SelectTab(tabConsole);
-                    dbu.BackupDBS();
+                    DBUtils.BackupDBS();
                     LoadVersions();
-                }
             }
             catch (Exception ex)
             {
@@ -125,11 +141,6 @@ namespace Doodle
             SaveSetting();
         }
 
-        private void lbVersions_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            btnRestore.Enabled = lbVersions.SelectedIndex != -1;
-        }
-
         private void btnClearConsole_Click(object sender, EventArgs e)
         {
             txtConsole.Text = "";
@@ -139,20 +150,24 @@ namespace Doodle
         {
             try
             {
-                if (lbVersions.SelectedIndex == -1) return;
-                var newVersion = lbVersions.SelectedItem.ToString();
-                var dbu = new DBUtils();
-                using (var conn = new System.Data.SqlClient.SqlConnection(ConnString))
+                if (dgvVersions.CurrentRow != null && dgvVersions.CurrentRow.DataBoundItem != null)
                 {
-                    dbu.Connection = conn;
-                    dbu.BackupDirectory = txtBackupDirectory.Text;
-                    dbu.DBPrefix = txtDBPrefix.Text;
-                    if (MessageBox.Show(string.Format("You are going to replace version \"{0}\" with version \"{1}\".\nContinue?", dbu.GetCurrentVersion(), newVersion), "Please confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    BackupInfo bi = dgvVersions.CurrentRow.DataBoundItem as BackupInfo;
+                    if (bi != null)
                     {
-                        tcMain.SelectTab(tabConsole);
-                        dbu.BackupDBS();
-                        dbu.RestoreDBS(newVersion);
-                        LoadVersions();
+                        if (MessageBox.Show(string.Format("You are going to replace current version \"{0}\" with version \"{1} ({2})\".\nContinue?", DBUtils.GetCurrentVersion(), bi.Version, bi.Timestamp), "Please confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            DialogResult res = MessageBox.Show("Create backup of current database?", "Please confirm", MessageBoxButtons.YesNoCancel);
+                            if (res == DialogResult.Cancel)
+                                return;
+                            tcMain.SelectTab(tabConsole);
+                            if (res == DialogResult.Yes)
+                            {
+                                DBUtils.BackupDBS();
+                            }
+                            DBUtils.RestoreDBS(bi.Version, bi.Timestamp);
+                            LoadVersions();
+                        }
                     }
                 }
             }
@@ -162,5 +177,18 @@ namespace Doodle
             }
         }
 
+        private void dgvVersions_SelectionChanged(object sender, EventArgs e)
+        {
+            DataGridView dgv = sender as DataGridView;
+            if (dgv != null)
+            {
+                btnRestore.Enabled = (dgv.CurrentRow != null && dgv.CurrentRow.DataBoundItem != null && dgv.CurrentRow.DataBoundItem is BackupInfo);
+            }
+        }
+
+        private void tabRestore_Enter(object sender, EventArgs e)
+        {
+            LoadVersions();
+        }
     }
 }

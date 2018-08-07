@@ -68,7 +68,7 @@ namespace DoodleConsole
             ArgsDict = ResolveArguments(args);
             var dbu = new DBUtils();
             dbu.BackupDirectory = ConfigurationManager.AppSettings["BackupFolder"];
-            dbu.Connection = new SqlConnection(ConfigurationManager.ConnectionStrings["MainConnectionString"].ConnectionString);
+            dbu.ConnString = ConfigurationManager.ConnectionStrings["MainConnectionString"].ConnectionString;
             dbu.DBPrefix = ConfigurationManager.AppSettings["DBPrefix"];
             if (command == Commands.List)
             {

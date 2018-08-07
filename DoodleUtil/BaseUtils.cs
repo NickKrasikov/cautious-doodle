@@ -6,6 +6,8 @@ namespace DoodleUtil
     {
         protected TextWriter logger;
 
+        public const string TimestampFormatString = "yyyy-MM-dd-HH-mm-ss";
+
         public BaseUtils(): this(Console.Out)
         {
         }

@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tcMain = new System.Windows.Forms.TabControl();
             this.tabSettings = new System.Windows.Forms.TabPage();
+            this.txtDBPrefix = new System.Windows.Forms.TextBox();
+            this.lblDBPrefix = new System.Windows.Forms.Label();
             this.btnSaveSettings = new System.Windows.Forms.Button();
             this.txtBackupDirectory = new System.Windows.Forms.TextBox();
             this.lblBackupDirectory = new System.Windows.Forms.Label();
@@ -44,17 +47,18 @@
             this.btnShowCurrentVersion = new System.Windows.Forms.Button();
             this.tabRestore = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.lbVersions = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnRestore = new System.Windows.Forms.Button();
             this.btnCurrentVersion = new System.Windows.Forms.Button();
             this.tabConsole = new System.Windows.Forms.TabPage();
-            this.txtDBPrefix = new System.Windows.Forms.TextBox();
-            this.lblDBPrefix = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.btnClearConsole = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.txtConsole = new System.Windows.Forms.TextBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.btnClearConsole = new System.Windows.Forms.Button();
+            this.dgvVersions = new System.Windows.Forms.DataGridView();
+            this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timestampDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.backupInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tcMain.SuspendLayout();
             this.tabSettings.SuspendLayout();
             this.tabBackup.SuspendLayout();
@@ -62,8 +66,10 @@
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabConsole.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
+            this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvVersions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.backupInfoBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tcMain
@@ -100,13 +106,30 @@
             this.tabSettings.Text = "Settings";
             this.tabSettings.UseVisualStyleBackColor = true;
             // 
+            // txtDBPrefix
+            // 
+            this.txtDBPrefix.Location = new System.Drawing.Point(102, 111);
+            this.txtDBPrefix.Name = "txtDBPrefix";
+            this.txtDBPrefix.Size = new System.Drawing.Size(197, 20);
+            this.txtDBPrefix.TabIndex = 5;
+            this.txtDBPrefix.TextChanged += new System.EventHandler(this.txtSetting_TextChanged);
+            // 
+            // lblDBPrefix
+            // 
+            this.lblDBPrefix.AutoSize = true;
+            this.lblDBPrefix.Location = new System.Drawing.Point(9, 111);
+            this.lblDBPrefix.Name = "lblDBPrefix";
+            this.lblDBPrefix.Size = new System.Drawing.Size(85, 13);
+            this.lblDBPrefix.TabIndex = 9;
+            this.lblDBPrefix.Text = "Database name:";
+            // 
             // btnSaveSettings
             // 
             this.btnSaveSettings.Enabled = false;
             this.btnSaveSettings.Location = new System.Drawing.Point(12, 143);
             this.btnSaveSettings.Name = "btnSaveSettings";
             this.btnSaveSettings.Size = new System.Drawing.Size(75, 23);
-            this.btnSaveSettings.TabIndex = 8;
+            this.btnSaveSettings.TabIndex = 0;
             this.btnSaveSettings.Text = "Save";
             this.btnSaveSettings.UseVisualStyleBackColor = true;
             this.btnSaveSettings.Click += new System.EventHandler(this.btnSaveSettings_Click);
@@ -116,7 +139,7 @@
             this.txtBackupDirectory.Location = new System.Drawing.Point(102, 85);
             this.txtBackupDirectory.Name = "txtBackupDirectory";
             this.txtBackupDirectory.Size = new System.Drawing.Size(197, 20);
-            this.txtBackupDirectory.TabIndex = 7;
+            this.txtBackupDirectory.TabIndex = 4;
             this.txtBackupDirectory.Text = "E:\\BackupDBs\\";
             this.txtBackupDirectory.TextChanged += new System.EventHandler(this.txtSetting_TextChanged);
             // 
@@ -134,7 +157,7 @@
             this.txtPassword.Location = new System.Drawing.Point(102, 59);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(197, 20);
-            this.txtPassword.TabIndex = 5;
+            this.txtPassword.TabIndex = 3;
             this.txtPassword.UseSystemPasswordChar = true;
             this.txtPassword.TextChanged += new System.EventHandler(this.txtSetting_TextChanged);
             // 
@@ -152,7 +175,7 @@
             this.txtDBUser.Location = new System.Drawing.Point(102, 33);
             this.txtDBUser.Name = "txtDBUser";
             this.txtDBUser.Size = new System.Drawing.Size(197, 20);
-            this.txtDBUser.TabIndex = 3;
+            this.txtDBUser.TabIndex = 2;
             this.txtDBUser.Text = "sa";
             this.txtDBUser.TextChanged += new System.EventHandler(this.txtSetting_TextChanged);
             // 
@@ -227,25 +250,16 @@
             this.tabRestore.TabIndex = 3;
             this.tabRestore.Text = "Restore";
             this.tabRestore.UseVisualStyleBackColor = true;
+            this.tabRestore.Enter += new System.EventHandler(this.tabRestore_Enter);
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.lbVersions);
+            this.panel2.Controls.Add(this.dgvVersions);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 49);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(663, 301);
             this.panel2.TabIndex = 1;
-            // 
-            // lbVersions
-            // 
-            this.lbVersions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbVersions.FormattingEnabled = true;
-            this.lbVersions.Location = new System.Drawing.Point(0, 0);
-            this.lbVersions.Name = "lbVersions";
-            this.lbVersions.Size = new System.Drawing.Size(663, 301);
-            this.lbVersions.TabIndex = 0;
-            this.lbVersions.SelectedIndexChanged += new System.EventHandler(this.lbVersions_SelectedIndexChanged);
             // 
             // panel1
             // 
@@ -292,43 +306,6 @@
             this.tabConsole.Text = "Console";
             this.tabConsole.UseVisualStyleBackColor = true;
             // 
-            // txtDBPrefix
-            // 
-            this.txtDBPrefix.Location = new System.Drawing.Point(102, 111);
-            this.txtDBPrefix.Name = "txtDBPrefix";
-            this.txtDBPrefix.Size = new System.Drawing.Size(197, 20);
-            this.txtDBPrefix.TabIndex = 10;
-            this.txtDBPrefix.TextChanged += new System.EventHandler(this.txtSetting_TextChanged);
-            // 
-            // lblDBPrefix
-            // 
-            this.lblDBPrefix.AutoSize = true;
-            this.lblDBPrefix.Location = new System.Drawing.Point(9, 111);
-            this.lblDBPrefix.Name = "lblDBPrefix";
-            this.lblDBPrefix.Size = new System.Drawing.Size(85, 13);
-            this.lblDBPrefix.TabIndex = 9;
-            this.lblDBPrefix.Text = "Database name:";
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.btnClearConsole);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(3, 3);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(657, 27);
-            this.panel3.TabIndex = 2;
-            // 
-            // btnClearConsole
-            // 
-            this.btnClearConsole.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnClearConsole.Location = new System.Drawing.Point(0, 0);
-            this.btnClearConsole.Name = "btnClearConsole";
-            this.btnClearConsole.Size = new System.Drawing.Size(657, 23);
-            this.btnClearConsole.TabIndex = 2;
-            this.btnClearConsole.Text = "Clear";
-            this.btnClearConsole.UseVisualStyleBackColor = true;
-            this.btnClearConsole.Click += new System.EventHandler(this.btnClearConsole_Click);
-            // 
             // panel4
             // 
             this.panel4.Controls.Add(this.txtConsole);
@@ -350,6 +327,67 @@
             this.txtConsole.Size = new System.Drawing.Size(657, 317);
             this.txtConsole.TabIndex = 1;
             // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.btnClearConsole);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(3, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(657, 27);
+            this.panel3.TabIndex = 2;
+            // 
+            // btnClearConsole
+            // 
+            this.btnClearConsole.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnClearConsole.Location = new System.Drawing.Point(0, 0);
+            this.btnClearConsole.Name = "btnClearConsole";
+            this.btnClearConsole.Size = new System.Drawing.Size(657, 23);
+            this.btnClearConsole.TabIndex = 2;
+            this.btnClearConsole.Text = "Clear";
+            this.btnClearConsole.UseVisualStyleBackColor = true;
+            this.btnClearConsole.Click += new System.EventHandler(this.btnClearConsole_Click);
+            // 
+            // dgvVersions
+            // 
+            this.dgvVersions.AllowUserToAddRows = false;
+            this.dgvVersions.AllowUserToDeleteRows = false;
+            this.dgvVersions.AllowUserToOrderColumns = true;
+            this.dgvVersions.AutoGenerateColumns = false;
+            this.dgvVersions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvVersions.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dgvVersions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvVersions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.versionDataGridViewTextBoxColumn,
+            this.timestampDataGridViewTextBoxColumn});
+            this.dgvVersions.DataSource = this.backupInfoBindingSource;
+            this.dgvVersions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvVersions.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dgvVersions.Location = new System.Drawing.Point(0, 0);
+            this.dgvVersions.MultiSelect = false;
+            this.dgvVersions.Name = "dgvVersions";
+            this.dgvVersions.RowHeadersVisible = false;
+            this.dgvVersions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvVersions.Size = new System.Drawing.Size(663, 301);
+            this.dgvVersions.TabIndex = 1;
+            this.dgvVersions.SelectionChanged += new System.EventHandler(this.dgvVersions_SelectionChanged);
+            // 
+            // versionDataGridViewTextBoxColumn
+            // 
+            this.versionDataGridViewTextBoxColumn.DataPropertyName = "Version";
+            this.versionDataGridViewTextBoxColumn.HeaderText = "Version";
+            this.versionDataGridViewTextBoxColumn.Name = "versionDataGridViewTextBoxColumn";
+            // 
+            // timestampDataGridViewTextBoxColumn
+            // 
+            this.timestampDataGridViewTextBoxColumn.DataPropertyName = "Timestamp";
+            this.timestampDataGridViewTextBoxColumn.HeaderText = "Timestamp";
+            this.timestampDataGridViewTextBoxColumn.Name = "timestampDataGridViewTextBoxColumn";
+            // 
+            // backupInfoBindingSource
+            // 
+            this.backupInfoBindingSource.AllowNew = false;
+            this.backupInfoBindingSource.DataSource = typeof(DoodleUtil.BackupInfo);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -368,9 +406,11 @@
             this.panel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.tabConsole.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvVersions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.backupInfoBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -397,13 +437,16 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnRestore;
         private System.Windows.Forms.Button btnCurrentVersion;
-        private System.Windows.Forms.ListBox lbVersions;
         private System.Windows.Forms.TextBox txtDBPrefix;
         private System.Windows.Forms.Label lblDBPrefix;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.TextBox txtConsole;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button btnClearConsole;
+        private System.Windows.Forms.DataGridView dgvVersions;
+        private System.Windows.Forms.BindingSource backupInfoBindingSource;
+        private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn timestampDataGridViewTextBoxColumn;
     }
 }
 
