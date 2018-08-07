@@ -71,15 +71,22 @@ namespace DoodleUtil
         public string GetCurrentVersion()
         {
             string version = string.Empty;
+            try
+            {
                 var cmd = Connection.CreateCommand();
                 cmd.CommandText = string.Format("SELECT TOP 1 ver FROM(SELECT installDate, hotfixID as ver FROM {0}..tInstallationHistory WHERE hotFixID IS NOT NULL UNION SELECT CAST(0 AS datetime) as installDate, value as ver FROM {0}..tPlatinaSettings WHERE name = N'SYSTEM_VersionNumber' ) h1 ORDER BY installDate DESC", DBPrefix);
                 using (SqlDataReader rdr = cmd.ExecuteReader())
                 {
                     while (rdr.Read())
                     {
-                        version = rdr[0].ToString(); 
+                        version = rdr[0].ToString();
                     }
                 }
+            }
+            catch (SqlException ex)
+            {
+                version = "none";
+            }
             return version.Replace(" ", "_");
         }
 
