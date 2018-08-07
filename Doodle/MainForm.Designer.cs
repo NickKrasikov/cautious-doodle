@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tcMain = new System.Windows.Forms.TabControl();
             this.tabSettings = new System.Windows.Forms.TabPage();
             this.txtDBPrefix = new System.Windows.Forms.TextBox();
@@ -47,6 +48,10 @@
             this.btnShowCurrentVersion = new System.Windows.Forms.Button();
             this.tabRestore = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.dgvVersions = new System.Windows.Forms.DataGridView();
+            this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timestampDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.backupInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnRestore = new System.Windows.Forms.Button();
             this.btnCurrentVersion = new System.Windows.Forms.Button();
@@ -55,21 +60,17 @@
             this.txtConsole = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnClearConsole = new System.Windows.Forms.Button();
-            this.dgvVersions = new System.Windows.Forms.DataGridView();
-            this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.timestampDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.backupInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tcMain.SuspendLayout();
             this.tabSettings.SuspendLayout();
             this.tabBackup.SuspendLayout();
             this.tabRestore.SuspendLayout();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvVersions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.backupInfoBindingSource)).BeginInit();
             this.panel1.SuspendLayout();
             this.tabConsole.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvVersions)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.backupInfoBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // tcMain
@@ -261,6 +262,47 @@
             this.panel2.Size = new System.Drawing.Size(663, 301);
             this.panel2.TabIndex = 1;
             // 
+            // dgvVersions
+            // 
+            this.dgvVersions.AllowUserToAddRows = false;
+            this.dgvVersions.AllowUserToDeleteRows = false;
+            this.dgvVersions.AllowUserToOrderColumns = true;
+            this.dgvVersions.AutoGenerateColumns = false;
+            this.dgvVersions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvVersions.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dgvVersions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvVersions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.versionDataGridViewTextBoxColumn,
+            this.timestampDataGridViewTextBoxColumn});
+            this.dgvVersions.DataSource = this.backupInfoBindingSource;
+            this.dgvVersions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvVersions.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dgvVersions.Location = new System.Drawing.Point(0, 0);
+            this.dgvVersions.MultiSelect = false;
+            this.dgvVersions.Name = "dgvVersions";
+            this.dgvVersions.RowHeadersVisible = false;
+            this.dgvVersions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvVersions.Size = new System.Drawing.Size(663, 301);
+            this.dgvVersions.TabIndex = 1;
+            this.dgvVersions.SelectionChanged += new System.EventHandler(this.dgvVersions_SelectionChanged);
+            // 
+            // versionDataGridViewTextBoxColumn
+            // 
+            this.versionDataGridViewTextBoxColumn.DataPropertyName = "Version";
+            this.versionDataGridViewTextBoxColumn.HeaderText = "Version";
+            this.versionDataGridViewTextBoxColumn.Name = "versionDataGridViewTextBoxColumn";
+            // 
+            // timestampDataGridViewTextBoxColumn
+            // 
+            this.timestampDataGridViewTextBoxColumn.DataPropertyName = "Timestamp";
+            this.timestampDataGridViewTextBoxColumn.HeaderText = "Timestamp";
+            this.timestampDataGridViewTextBoxColumn.Name = "timestampDataGridViewTextBoxColumn";
+            // 
+            // backupInfoBindingSource
+            // 
+            this.backupInfoBindingSource.AllowNew = false;
+            this.backupInfoBindingSource.DataSource = typeof(DoodleUtil.BackupInfo);
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.btnRestore);
@@ -347,53 +389,13 @@
             this.btnClearConsole.UseVisualStyleBackColor = true;
             this.btnClearConsole.Click += new System.EventHandler(this.btnClearConsole_Click);
             // 
-            // dgvVersions
-            // 
-            this.dgvVersions.AllowUserToAddRows = false;
-            this.dgvVersions.AllowUserToDeleteRows = false;
-            this.dgvVersions.AllowUserToOrderColumns = true;
-            this.dgvVersions.AutoGenerateColumns = false;
-            this.dgvVersions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvVersions.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dgvVersions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvVersions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.versionDataGridViewTextBoxColumn,
-            this.timestampDataGridViewTextBoxColumn});
-            this.dgvVersions.DataSource = this.backupInfoBindingSource;
-            this.dgvVersions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvVersions.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dgvVersions.Location = new System.Drawing.Point(0, 0);
-            this.dgvVersions.MultiSelect = false;
-            this.dgvVersions.Name = "dgvVersions";
-            this.dgvVersions.RowHeadersVisible = false;
-            this.dgvVersions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvVersions.Size = new System.Drawing.Size(663, 301);
-            this.dgvVersions.TabIndex = 1;
-            this.dgvVersions.SelectionChanged += new System.EventHandler(this.dgvVersions_SelectionChanged);
-            // 
-            // versionDataGridViewTextBoxColumn
-            // 
-            this.versionDataGridViewTextBoxColumn.DataPropertyName = "Version";
-            this.versionDataGridViewTextBoxColumn.HeaderText = "Version";
-            this.versionDataGridViewTextBoxColumn.Name = "versionDataGridViewTextBoxColumn";
-            // 
-            // timestampDataGridViewTextBoxColumn
-            // 
-            this.timestampDataGridViewTextBoxColumn.DataPropertyName = "Timestamp";
-            this.timestampDataGridViewTextBoxColumn.HeaderText = "Timestamp";
-            this.timestampDataGridViewTextBoxColumn.Name = "timestampDataGridViewTextBoxColumn";
-            // 
-            // backupInfoBindingSource
-            // 
-            this.backupInfoBindingSource.AllowNew = false;
-            this.backupInfoBindingSource.DataSource = typeof(DoodleUtil.BackupInfo);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(671, 376);
             this.Controls.Add(this.tcMain);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "Doodle";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -404,13 +406,13 @@
             this.tabBackup.ResumeLayout(false);
             this.tabRestore.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvVersions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.backupInfoBindingSource)).EndInit();
             this.panel1.ResumeLayout(false);
             this.tabConsole.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvVersions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.backupInfoBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
