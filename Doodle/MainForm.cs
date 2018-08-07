@@ -39,7 +39,6 @@ namespace Doodle
         public MainForm()
         {
             InitializeComponent();
-            backupInfoBindingSource.DataSource = GetVersionsList();
             dgvVersions.AutoGenerateColumns = true;
             var grouper = new Subro.Controls.DataGridViewGrouper(dgvVersions);
             grouper.SetGroupOn("Version");

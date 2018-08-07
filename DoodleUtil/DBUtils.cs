@@ -168,6 +168,11 @@ namespace DoodleUtil
             {
                 backupDir += @"\";
             }
+            if (!Directory.Exists(backupDir))
+            {
+                logger.WriteLine("Backup directory \"{0}\" doesn't exist.", backupDir);
+                return result;
+            }
             foreach (var dir in Directory.GetDirectories(backupDir, "*", SearchOption.TopDirectoryOnly))
             {
                 result.Add(dir.Substring(dir.LastIndexOf(@"\") + 1).ToLower());
@@ -186,6 +191,11 @@ namespace DoodleUtil
             if (!backupDir.EndsWith(@"\"))
             {
                 backupDir += @"\";
+            }
+            if (!Directory.Exists(backupDir))
+            {
+                logger.WriteLine("Backup directory \"{0}\" doesn't exist.", backupDir);
+                return result;
             }
             foreach (var ver in Directory.GetDirectories(backupDir, "*", SearchOption.TopDirectoryOnly))
             {
@@ -264,6 +274,7 @@ namespace DoodleUtil
                 backupDir += @"\";
             }
             backupDir += timestamp.ToString(TimestampFormatString);
+            backupDir = Path.GetFullPath(backupDir);
             if (Directory.Exists(backupDir))
             {
                 logger.WriteLine("Restore databases from directory \"{0}\"", backupDir);
