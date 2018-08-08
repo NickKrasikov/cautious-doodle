@@ -4,7 +4,7 @@ using System.Linq;
 
 using DoodleUtil;
 using System.Configuration;
-using System.Data.SqlClient;
+
 
 namespace DoodleConsole
 {

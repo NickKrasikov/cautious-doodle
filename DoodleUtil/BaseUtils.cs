@@ -8,6 +8,12 @@ namespace DoodleUtil
 
         public const string TimestampFormatString = "yyyy-MM-dd-HH-mm-ss";
 
+        public string BackupDirectory
+        {
+            get;
+            set;
+        }
+
         public BaseUtils(): this(Console.Out)
         {
         }
