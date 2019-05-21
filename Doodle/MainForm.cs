@@ -189,5 +189,15 @@ namespace Doodle
         {
             LoadVersions();
         }
+
+        private void btnDrop_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("You are going to drop current database!\nAre you sure?", "Please confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                tcMain.SelectTab(tabConsole);
+                DBUtils.DropDBS();
+                LoadVersions();
+            }
+        }
     }
 }

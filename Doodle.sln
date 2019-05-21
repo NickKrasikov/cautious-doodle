@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoodleConsole", "DoodleCons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doodle", "Doodle\Doodle.csproj", "{93622C67-63FB-4DC0-8273-5C4926B8FEBA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dummy", "Dummy\Dummy.csproj", "{8350CB74-EB18-439C-AF96-7578DC5F304F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,8 @@ Global
 		{93622C67-63FB-4DC0-8273-5C4926B8FEBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93622C67-63FB-4DC0-8273-5C4926B8FEBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93622C67-63FB-4DC0-8273-5C4926B8FEBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8350CB74-EB18-439C-AF96-7578DC5F304F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8350CB74-EB18-439C-AF96-7578DC5F304F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

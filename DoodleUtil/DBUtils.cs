@@ -7,25 +7,6 @@ using System.Text;
 
 namespace DoodleUtil
 {
-    public class BackupInfo
-    {
-        public string Version
-        {
-            get;
-            set;
-        }
-        public DateTime Timestamp
-        {
-            get;
-            set;
-        }
-        public string WebRootLocalPath
-        {
-            get;
-            set;
-        }
-    }
-
     public class DBUtils: BaseUtils, IDisposable
     {
         #region private props

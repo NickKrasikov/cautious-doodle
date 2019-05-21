@@ -14,3 +14,5 @@ build/
 [Bb]in/
 [Oo]bj/
 /*.nupkg
+/.vs/*
+/packages/*

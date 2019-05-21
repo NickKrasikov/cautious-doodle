@@ -2,6 +2,25 @@
 using System.IO;
 namespace DoodleUtil
 {
+    public class BackupInfo
+    {
+        public string Version
+        {
+            get;
+            set;
+        }
+        public DateTime Timestamp
+        {
+            get;
+            set;
+        }
+        public string WebRootLocalPath
+        {
+            get;
+            set;
+        }
+    }
+
     public abstract class BaseUtils
     {
         protected TextWriter logger;

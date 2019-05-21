@@ -60,6 +60,9 @@
             this.txtConsole = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnClearConsole = new System.Windows.Forms.Button();
+            this.tabDrop = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
+            this.btnDrop = new System.Windows.Forms.Button();
             this.tcMain.SuspendLayout();
             this.tabSettings.SuspendLayout();
             this.tabBackup.SuspendLayout();
@@ -71,6 +74,7 @@
             this.tabConsole.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.tabDrop.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcMain
@@ -78,6 +82,7 @@
             this.tcMain.Controls.Add(this.tabSettings);
             this.tcMain.Controls.Add(this.tabBackup);
             this.tcMain.Controls.Add(this.tabRestore);
+            this.tcMain.Controls.Add(this.tabDrop);
             this.tcMain.Controls.Add(this.tabConsole);
             this.tcMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcMain.Location = new System.Drawing.Point(0, 0);
@@ -389,6 +394,39 @@
             this.btnClearConsole.UseVisualStyleBackColor = true;
             this.btnClearConsole.Click += new System.EventHandler(this.btnClearConsole_Click);
             // 
+            // tabDrop
+            // 
+            this.tabDrop.Controls.Add(this.btnDrop);
+            this.tabDrop.Controls.Add(this.button1);
+            this.tabDrop.Location = new System.Drawing.Point(4, 22);
+            this.tabDrop.Name = "tabDrop";
+            this.tabDrop.Size = new System.Drawing.Size(663, 350);
+            this.tabDrop.TabIndex = 4;
+            this.tabDrop.Text = "Drop";
+            this.tabDrop.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button1.Location = new System.Drawing.Point(0, 0);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(663, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "Current version";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.btnShowCurrentVersion_Click);
+            // 
+            // btnDrop
+            // 
+            this.btnDrop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnDrop.Location = new System.Drawing.Point(0, 23);
+            this.btnDrop.Name = "btnDrop";
+            this.btnDrop.Size = new System.Drawing.Size(663, 23);
+            this.btnDrop.TabIndex = 2;
+            this.btnDrop.Text = "Drop";
+            this.btnDrop.UseVisualStyleBackColor = true;
+            this.btnDrop.Click += new System.EventHandler(this.btnDrop_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -413,6 +451,7 @@
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel3.ResumeLayout(false);
+            this.tabDrop.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -449,6 +488,9 @@
         private System.Windows.Forms.BindingSource backupInfoBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn timestampDataGridViewTextBoxColumn;
+        private System.Windows.Forms.TabPage tabDrop;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnDrop;
     }
 }
 
