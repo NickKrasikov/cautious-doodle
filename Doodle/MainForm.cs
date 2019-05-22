@@ -8,6 +8,7 @@ using Subro.Controls;
 
 namespace Doodle
 {
+
     public partial class MainForm : Form
     {
         private TextWriter _writer = null;
@@ -93,10 +94,10 @@ namespace Doodle
         private void btnBackup_Click(object sender, EventArgs e)
         {
             try
-            { 
-                    tcMain.SelectTab(tabConsole);
-                    DBUtils.BackupDBS();
-                    LoadVersions();
+            {
+                tcMain.SelectTab(tabConsole);
+                Backup();
+                LoadVersions();
             }
             catch (Exception ex)
             {
@@ -162,7 +163,7 @@ namespace Doodle
                             tcMain.SelectTab(tabConsole);
                             if (res == DialogResult.Yes)
                             {
-                                DBUtils.BackupDBS();
+                                Backup();
                             }
                             DBUtils.RestoreDBS(bi.Version, bi.Timestamp);
                             LoadVersions();
@@ -194,10 +195,68 @@ namespace Doodle
         {
             if (MessageBox.Show("You are going to drop current database!\nAre you sure?", "Please confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
+                DialogResult res = MessageBox.Show("Create backup of current database?", "Please confirm", MessageBoxButtons.YesNoCancel);
+                if (res == DialogResult.Cancel)
+                    return;
                 tcMain.SelectTab(tabConsole);
+                if (res == DialogResult.Yes)
+                {
+                    Backup();
+                }
                 DBUtils.DropDBS();
                 LoadVersions();
             }
+        }
+
+        private void Backup()
+        {
+            string value = string.Empty;
+            if (InputBox("Add comment", "Some comments to backup:", ref value) == DialogResult.OK)
+            {
+                DBUtils.BackupDBS(value);
+            }
+        }
+
+        public static DialogResult InputBox(string title, string promptText, ref string value)
+        {
+            Form form = new Form();
+            Label label = new Label();
+            TextBox textBox = new TextBox();
+            Button buttonOk = new Button();
+            Button buttonCancel = new Button();
+
+            form.Text = title;
+            label.Text = promptText;
+            textBox.Text = value;
+
+            buttonOk.Text = "OK";
+            buttonCancel.Text = "Cancel";
+            buttonOk.DialogResult = DialogResult.OK;
+            buttonCancel.DialogResult = DialogResult.Cancel;
+
+            label.SetBounds(9, 20, 372, 13);
+            textBox.SetBounds(12, 36, 372, 20);
+            buttonOk.SetBounds(228, 72, 75, 23);
+            buttonCancel.SetBounds(309, 72, 75, 23);
+
+            label.AutoSize = true;
+            textBox.Anchor = textBox.Anchor | AnchorStyles.Right;
+            buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+
+            form.ClientSize = new System.Drawing.Size(396, 107);
+            form.Controls.AddRange(new Control[] { label, textBox, buttonOk, buttonCancel });
+            form.ClientSize = new System.Drawing.Size(Math.Max(300, label.Right + 10), form.ClientSize.Height);
+            form.FormBorderStyle = FormBorderStyle.FixedDialog;
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.MinimizeBox = false;
+            form.MaximizeBox = false;
+            form.AcceptButton = buttonOk;
+            form.CancelButton = buttonCancel;
+
+            DialogResult dialogResult = form.ShowDialog();
+            value = textBox.Text;
+            return dialogResult;
         }
     }
 }

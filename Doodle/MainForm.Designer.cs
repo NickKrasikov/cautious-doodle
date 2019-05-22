@@ -49,20 +49,22 @@
             this.tabRestore = new System.Windows.Forms.TabPage();
             this.panel2 = new System.Windows.Forms.Panel();
             this.dgvVersions = new System.Windows.Forms.DataGridView();
-            this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.timestampDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.backupInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnRestore = new System.Windows.Forms.Button();
             this.btnCurrentVersion = new System.Windows.Forms.Button();
+            this.tabDrop = new System.Windows.Forms.TabPage();
+            this.btnDrop = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabConsole = new System.Windows.Forms.TabPage();
             this.panel4 = new System.Windows.Forms.Panel();
             this.txtConsole = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnClearConsole = new System.Windows.Forms.Button();
-            this.tabDrop = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.btnDrop = new System.Windows.Forms.Button();
+            this.versionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timestampDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.WebRootLocalPath = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Comment = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tcMain.SuspendLayout();
             this.tabSettings.SuspendLayout();
             this.tabBackup.SuspendLayout();
@@ -71,10 +73,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvVersions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.backupInfoBindingSource)).BeginInit();
             this.panel1.SuspendLayout();
+            this.tabDrop.SuspendLayout();
             this.tabConsole.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
-            this.tabDrop.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcMain
@@ -278,7 +280,9 @@
             this.dgvVersions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvVersions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.versionDataGridViewTextBoxColumn,
-            this.timestampDataGridViewTextBoxColumn});
+            this.timestampDataGridViewTextBoxColumn,
+            this.WebRootLocalPath,
+            this.Comment});
             this.dgvVersions.DataSource = this.backupInfoBindingSource;
             this.dgvVersions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvVersions.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -290,18 +294,6 @@
             this.dgvVersions.Size = new System.Drawing.Size(663, 301);
             this.dgvVersions.TabIndex = 1;
             this.dgvVersions.SelectionChanged += new System.EventHandler(this.dgvVersions_SelectionChanged);
-            // 
-            // versionDataGridViewTextBoxColumn
-            // 
-            this.versionDataGridViewTextBoxColumn.DataPropertyName = "Version";
-            this.versionDataGridViewTextBoxColumn.HeaderText = "Version";
-            this.versionDataGridViewTextBoxColumn.Name = "versionDataGridViewTextBoxColumn";
-            // 
-            // timestampDataGridViewTextBoxColumn
-            // 
-            this.timestampDataGridViewTextBoxColumn.DataPropertyName = "Timestamp";
-            this.timestampDataGridViewTextBoxColumn.HeaderText = "Timestamp";
-            this.timestampDataGridViewTextBoxColumn.Name = "timestampDataGridViewTextBoxColumn";
             // 
             // backupInfoBindingSource
             // 
@@ -340,6 +332,39 @@
             this.btnCurrentVersion.Text = "Current version";
             this.btnCurrentVersion.UseVisualStyleBackColor = true;
             this.btnCurrentVersion.Click += new System.EventHandler(this.btnShowCurrentVersion_Click);
+            // 
+            // tabDrop
+            // 
+            this.tabDrop.Controls.Add(this.btnDrop);
+            this.tabDrop.Controls.Add(this.button1);
+            this.tabDrop.Location = new System.Drawing.Point(4, 22);
+            this.tabDrop.Name = "tabDrop";
+            this.tabDrop.Size = new System.Drawing.Size(663, 350);
+            this.tabDrop.TabIndex = 4;
+            this.tabDrop.Text = "Drop";
+            this.tabDrop.UseVisualStyleBackColor = true;
+            // 
+            // btnDrop
+            // 
+            this.btnDrop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnDrop.Location = new System.Drawing.Point(0, 23);
+            this.btnDrop.Name = "btnDrop";
+            this.btnDrop.Size = new System.Drawing.Size(663, 23);
+            this.btnDrop.TabIndex = 2;
+            this.btnDrop.Text = "Drop";
+            this.btnDrop.UseVisualStyleBackColor = true;
+            this.btnDrop.Click += new System.EventHandler(this.btnDrop_Click);
+            // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button1.Location = new System.Drawing.Point(0, 0);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(663, 23);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "Current version";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.btnShowCurrentVersion_Click);
             // 
             // tabConsole
             // 
@@ -394,38 +419,31 @@
             this.btnClearConsole.UseVisualStyleBackColor = true;
             this.btnClearConsole.Click += new System.EventHandler(this.btnClearConsole_Click);
             // 
-            // tabDrop
+            // versionDataGridViewTextBoxColumn
             // 
-            this.tabDrop.Controls.Add(this.btnDrop);
-            this.tabDrop.Controls.Add(this.button1);
-            this.tabDrop.Location = new System.Drawing.Point(4, 22);
-            this.tabDrop.Name = "tabDrop";
-            this.tabDrop.Size = new System.Drawing.Size(663, 350);
-            this.tabDrop.TabIndex = 4;
-            this.tabDrop.Text = "Drop";
-            this.tabDrop.UseVisualStyleBackColor = true;
+            this.versionDataGridViewTextBoxColumn.DataPropertyName = "Version";
+            this.versionDataGridViewTextBoxColumn.HeaderText = "Version";
+            this.versionDataGridViewTextBoxColumn.Name = "versionDataGridViewTextBoxColumn";
             // 
-            // button1
+            // timestampDataGridViewTextBoxColumn
             // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button1.Location = new System.Drawing.Point(0, 0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(663, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Current version";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.btnShowCurrentVersion_Click);
+            this.timestampDataGridViewTextBoxColumn.DataPropertyName = "Timestamp";
+            this.timestampDataGridViewTextBoxColumn.HeaderText = "Timestamp";
+            this.timestampDataGridViewTextBoxColumn.Name = "timestampDataGridViewTextBoxColumn";
             // 
-            // btnDrop
+            // WebRootLocalPath
             // 
-            this.btnDrop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnDrop.Location = new System.Drawing.Point(0, 23);
-            this.btnDrop.Name = "btnDrop";
-            this.btnDrop.Size = new System.Drawing.Size(663, 23);
-            this.btnDrop.TabIndex = 2;
-            this.btnDrop.Text = "Drop";
-            this.btnDrop.UseVisualStyleBackColor = true;
-            this.btnDrop.Click += new System.EventHandler(this.btnDrop_Click);
+            this.WebRootLocalPath.DataPropertyName = "WebRootLocalPath";
+            this.WebRootLocalPath.HeaderText = "WebRootLocalPath";
+            this.WebRootLocalPath.Name = "WebRootLocalPath";
+            this.WebRootLocalPath.Visible = false;
+            // 
+            // Comment
+            // 
+            this.Comment.DataPropertyName = "Comment";
+            this.Comment.HeaderText = "Comment";
+            this.Comment.Name = "Comment";
+            this.Comment.ReadOnly = true;
             // 
             // MainForm
             // 
@@ -447,11 +465,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvVersions)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.backupInfoBindingSource)).EndInit();
             this.panel1.ResumeLayout(false);
+            this.tabDrop.ResumeLayout(false);
             this.tabConsole.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel3.ResumeLayout(false);
-            this.tabDrop.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -486,11 +504,13 @@
         private System.Windows.Forms.Button btnClearConsole;
         private System.Windows.Forms.DataGridView dgvVersions;
         private System.Windows.Forms.BindingSource backupInfoBindingSource;
-        private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn timestampDataGridViewTextBoxColumn;
         private System.Windows.Forms.TabPage tabDrop;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnDrop;
+        private System.Windows.Forms.DataGridViewTextBoxColumn versionDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn timestampDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn WebRootLocalPath;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Comment;
     }
 }
 

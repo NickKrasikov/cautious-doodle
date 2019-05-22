@@ -19,6 +19,11 @@ namespace DoodleUtil
             get;
             set;
         }
+        public string Comment
+        {
+            get;
+            set;
+        }
     }
 
     public abstract class BaseUtils

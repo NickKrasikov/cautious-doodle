@@ -9,6 +9,8 @@ namespace DoodleUtil
 {
     public class DBUtils: BaseUtils, IDisposable
     {
+        private const string commentsFileName = "comments.txt";
+
         #region private props
 
         private SqlConnection m_conn;
@@ -82,6 +84,11 @@ namespace DoodleUtil
 
         public void BackupDBS()
         {
+            BackupDBS(string.Empty);
+        }
+
+        public void BackupDBS(string comment)
+        {
             string version = GetCurrentVersion();
             if (string.IsNullOrWhiteSpace(version))
             {
@@ -113,8 +120,16 @@ namespace DoodleUtil
                     ExecSql(sql);
                     logger.WriteLine("Done", dbName, fName);
                 }
+                if(!string.IsNullOrWhiteSpace(comment))
+                {
+                    string cFilePath = Path.Combine(backupDir, commentsFileName);
+                    logger.WriteLine("Save comment \"{0}\" to file \"{1}\"", comment, cFilePath);
+                    File.WriteAllText(cFilePath, comment);
+                    logger.WriteLine("Done.");
+                }
             }
         }
+
 
         public List<BackupInfo> GetLocalBackups()
         {
@@ -142,7 +157,13 @@ namespace DoodleUtil
                     DateTime dt;
                     if (DateTime.TryParseExact(tmp, TimestampFormatString, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out dt))
                     {
-                        result.Add(new BackupInfo() { Version = sVer, Timestamp = dt });
+                        string cFileName = Path.Combine(ts, commentsFileName);
+                        string comment = string.Empty;
+                        if (File.Exists(cFileName))
+                        {
+                            comment = File.ReadAllText(cFileName);
+                        }
+                        result.Add(new BackupInfo() { Version = sVer, Timestamp = dt, Comment = comment });
                     }
                 }
             }
